@@ -1,0 +1,2 @@
+openssl genrsa -out developer.key 2048
+openssl req -new -key developer.key -out developer.csr -subj "/CN=developer/O=development"

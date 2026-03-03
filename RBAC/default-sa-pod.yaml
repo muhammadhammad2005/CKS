@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: default-sa-pod
+  namespace: secure-app
+spec:
+  serviceAccountName: default
+  containers:
+  - name: test-container
+    image: nginx:1.21
+    command: ["sleep", "3600"]
