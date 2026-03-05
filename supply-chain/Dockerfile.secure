@@ -1,0 +1,6 @@
+FROM nginx:1.24-alpine
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+USER appuser
+COPY --chown=appuser:appgroup index.html /usr/share/nginx/html/
+EXPOSE 8080

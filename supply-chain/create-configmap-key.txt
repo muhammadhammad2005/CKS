@@ -1,0 +1,14 @@
+# Create a ConfigMap with our public key
+kubectl create configmap cosign-public-key --from-file=cosign.pub
+
+# Verify the ConfigMap
+kubectl get configmap cosign-public-key -o yaml
+
+# Install Gatekeeper
+kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.14/deploy/gatekeeper.yaml
+
+# Wait for Gatekeeper to be ready
+kubectl wait --for=condition=Ready pod -l control-plane=controller-manager -n gatekeeper-system --timeout=300s
+
+# Verify Gatekeeper is running
+kubectl get pods -n gatekeeper-system

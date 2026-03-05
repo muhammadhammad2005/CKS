@@ -1,0 +1,14 @@
+# Pull a sample application image
+docker pull nginx:1.24-alpine
+
+# Verify the image is available
+docker images | grep nginx
+
+# Generate SBOM in SPDX format
+syft nginx:1.24-alpine -o spdx-json > nginx-sbom.spdx.json
+
+# Generate SBOM in CycloneDX format
+syft nginx:1.24-alpine -o cyclonedx-json > nginx-sbom.cyclonedx.json
+
+# Generate human-readable table format
+syft nginx:1.24-alpine -o table > nginx-sbom.txt

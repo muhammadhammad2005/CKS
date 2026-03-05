@@ -1,0 +1,6 @@
+I am using these images for the lab:
+
+
+hammad2005/nginx:1.24-alpine                
+hammad2005/secure-app:v1.0                                                                  
+hammad2005/vulnerable-app:latest   

@@ -1,0 +1,41 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: requireimagesignature
+spec:
+  crd:
+    spec:
+      names:
+        kind: RequireImageSignature
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            publicKey:
+              type: string
+            exemptImages:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package requireimagesignature
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          image := container.image
+          not is_exempt(image)
+          not is_signed(image)
+          msg := sprintf("Image %v is not signed with required key", [image])
+        }
+        
+        is_exempt(image) {
+          input.parameters.exemptImages[_] == image
+        }
+        
+        is_signed(image) {
+          # This is a simplified check - in practice, you'd integrate with cosign
+          # For this demo, we'll assume images with "secure" in the name are signed
+          contains(image, "secure")
+        }

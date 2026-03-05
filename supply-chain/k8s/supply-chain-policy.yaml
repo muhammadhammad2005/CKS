@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supply-chain-policy
+  namespace: supply-chain-demo
+data:
+  policy.yaml: |
+    supply_chain_policy:
+      sbom_required: true
+      vulnerability_scan_required: true
+      max_critical_vulnerabilities: 0
+      max_high_vulnerabilities: 5
+      signature_required: true
+      allowed_registries:
+        - "docker.io"
+        - "gcr.io"
+        - "quay.io"
+      blocked_images:
+        - ".*:latest"  # Block latest tags
+      required_labels:
+        - "maintainer"
+        - "version"

@@ -1,0 +1,16 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: RequireImageSignature
+metadata:
+  name: require-signed-images
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+  parameters:
+    publicKey: "cosign-public-key"
+    exemptImages:
+      - "registry.k8s.io/pause:*"
+      - "kindest/kindnetd:*"
