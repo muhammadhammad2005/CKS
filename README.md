@@ -20,9 +20,10 @@ This repository reflects practical security labs and experiments rather than the
 
 ## 🧪 Lab Environment
 
-- Platform: Cloud-based lab environment (Al Nafi)  
-- Tools: Kubernetes, Docker, Bash, YAML
-- Execution: Remote lab nodes  
+- Platform: Al Nafi cloud lab environment  
+- Infrastructure: AWS EC2 instances  
+- Kubernetes Setup: Kubernetes cluster running on EC2 nodes  
+- Tools: Kubernetes, Docker, Bash, YAML  
 - Focus: Kubernetes cluster and container security  
 ---
 
