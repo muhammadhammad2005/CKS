@@ -21,8 +21,7 @@ This repository reflects practical security labs and experiments rather than the
 ## 🧪 Lab Environment
 
 - Platform: Cloud-based lab environment (Al Nafi)  
-- Tools: Kubernetes, Docker, Bash  
-- Security Tools: Falco, Trivy, Kubectl security configurations  
+- Tools: Kubernetes, Docker, Bash, YAML
 - Execution: Remote lab nodes  
 - Focus: Kubernetes cluster and container security  
 ---
