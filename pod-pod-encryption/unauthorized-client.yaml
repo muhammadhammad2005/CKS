@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unauthorized-client
+  namespace: unauthorized
+  labels:
+    app: unauthorized-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unauthorized-client
+  template:
+    metadata:
+      labels:
+        app: unauthorized-client
+    spec:
+      containers:
+      - name: client
+        image: curlimages/curl:7.85.0
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do sleep 30; done"]

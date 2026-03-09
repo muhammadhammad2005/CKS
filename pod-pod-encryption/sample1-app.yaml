@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html
+        configMap:
+          name: frontend-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  index.html: |
+    <html>
+    <head><title>Frontend Service</title></head>
+    <body>
+    <h1>Frontend Application</h1>
+    <p>This is the frontend service running with Istio sidecar.</p>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: frontend

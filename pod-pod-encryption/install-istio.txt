@@ -1,0 +1,22 @@
+# Download Istio
+curl -L https://istio.io/downloadIstio | sh -
+
+# Move to Istio directory
+cd istio-*
+
+# Add istioctl to PATH
+export PATH=$PWD/bin:$PATH
+
+# Verify installation
+istioctl version
+
+Install Istio using the demo configuration profile, which includes all core components.
+
+# Install Istio with demo profile
+istioctl install --set values.defaultRevision=default -y
+
+# Verify installation
+kubectl get pods -n istio-system
+
+# Wait for all pods to be running
+kubectl wait --for=condition=ready pod --all -n istio-system --timeout=300s

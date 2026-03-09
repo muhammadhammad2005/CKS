@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: httpd:2.4
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/local/apache2/htdocs
+      volumes:
+      - name: html
+        configMap:
+          name: backend-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  index.html: |
+    <html>
+    <head><title>Backend Service</title></head>
+    <body>
+    <h1>Backend Application</h1>
+    <p>This is the backend service with secure communication.</p>
+    <p>Current time: $(date)</p>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: backend
