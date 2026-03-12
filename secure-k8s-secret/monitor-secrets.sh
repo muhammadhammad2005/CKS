@@ -1,17 +1,33 @@
 #!/bin/bash
 
-echo "Monitoring secret access patterns..."
+echo "=== Kubernetes Secret Monitoring Tool ==="
+echo "Timestamp: $(date)"
+echo
 
-# List all secrets and their age
+info() { echo "[INFO] $1"; }
+
+# Check kubectl availability
+if ! command -v kubectl &> /dev/null
+then
+    echo "ERROR: kubectl is not installed."
+    exit 1
+fi
+
 echo "=== Current Secrets ==="
-kubectl get secrets -o custom-columns=NAME:.metadata.name,AGE:.metadata.creationTimestamp
+kubectl get secrets --all-namespaces \
+-o custom-columns="NAMESPACE:.metadata.namespace,NAME:.metadata.name,TYPE:.type,CREATED:.metadata.creationTimestamp"
 
-# Check which pods are using secrets
-echo "=== Pods using secrets ==="
-kubectl get pods -o yaml | grep -A 5 -B 5 secretKeyRef
+echo
+echo "=== Pods Referencing Secrets (Environment Variables) ==="
+kubectl get pods --all-namespaces -o yaml | grep -E "namespace:|name:|secretKeyRef" -A2
 
-# List service accounts with secret access
-echo "=== Service accounts with secret access ==="
-kubectl get rolebindings -o yaml | grep -A 10 -B 5 secrets
+echo
+echo "=== Pods Using Secrets as Volumes ==="
+kubectl get pods --all-namespaces -o yaml | grep -E "secretName"
 
-echo "Monitoring completed"
+echo
+echo "=== RBAC Roles Accessing Secrets ==="
+kubectl get roles,clusterroles --all-namespaces -o yaml | grep -A5 "resources:.*secrets"
+
+echo
+echo "=== Secret Monitoring Completed ==="
