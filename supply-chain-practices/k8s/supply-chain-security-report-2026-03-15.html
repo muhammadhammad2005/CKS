@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Supply Chain Security Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    .header { background: #1E3A5F; color: white; padding: 20px; border-radius: 8px; }
+    .section { background: white; margin: 20px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .critical { color: #cc0000; font-weight: bold; }
+    .high { color: #cc6600; font-weight: bold; }
+    .ok { color: #006600; font-weight: bold; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #2E75B6; color: white; }
+    tr:nth-child(even) { background: #f9f9f9; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Supply Chain Security Report</h1>
+    <p>Generated: 2026-03-15</p>
+  </div>
+  <div class='section'><h2>SBOM Summary</h2>
+  <table><tr><th>Image</th><th>Packages</th><th>SBOM Status</th></tr>
+  <tr><td>node:16-alpine</td><td>-</td><td class='high'>Not generated</td></tr>
+  <tr><td>python:3.9-slim</td><td>-</td><td class='high'>Not generated</td></tr>
+  </table></div>
+  <div class='section'><h2>Image Signing Status</h2>
+  <table><tr><th>Image</th><th>Status</th></tr>
+  <tr><td>localhost:5000/node:16-alpine</td><td class='critical'>✗ Not Signed</td></tr>
+  </table></div>
+</body></html>

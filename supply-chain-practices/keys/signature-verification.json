@@ -1,0 +1,30 @@
+[
+  {
+    "critical": {
+      "identity": {
+        "docker-reference": "localhost:5000/node:16-alpine"
+      },
+      "image": {
+        "docker-manifest-digest": "sha256:72e89a86be58c922ed7b1475e5e6f151537676470695dd106521738b060e139d"
+      },
+      "type": "https://sigstore.dev/cosign/sign/v1"
+    },
+    "optional": {
+      "author": "security-team",
+      "purpose": "lab-demo",
+      "scan-status": "clean"
+    }
+  },
+  {
+    "critical": {
+      "identity": {
+        "docker-reference": "localhost:5000/node:16-alpine"
+      },
+      "image": {
+        "docker-manifest-digest": "sha256:72e89a86be58c922ed7b1475e5e6f151537676470695dd106521738b060e139d"
+      },
+      "type": "https://sigstore.dev/cosign/sign/v1"
+    },
+    "optional": {}
+  }
+]
