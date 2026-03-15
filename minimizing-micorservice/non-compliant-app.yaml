@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: non-compliant-app
+  namespace: secure-microservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: non-compliant-app
+  template:
+    metadata:
+      labels:
+        app: non-compliant-app
+    spec:
+      containers:
+      - name: app
+        image: nginx:latest
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        ports:
+        - containerPort: 80

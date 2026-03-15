@@ -1,0 +1,36 @@
+=== MICROSERVICE SECURITY REPORT ===
+Generated on: Sun Mar 15 10:20:42 UTC 2026
+
+1. NAMESPACE SECURITY CONFIGURATION:
+NAME                   STATUS   AGE   LABELS
+secure-microservices   Active   18m   kubernetes.io/metadata.name=secure-microservices,pod-security.kubernetes.io/audit=baseline,pod-security.kubernetes.io/enforce=baseline,pod-security.kubernetes.io/warn=baseline
+
+2. POD SECURITY STANDARDS (runtime class + user):
+NAME                             RUNTIME   USER   NON-ROOT
+compliant-app-66f977ddfd-5ljcx   <none>    1000   true
+compliant-app-66f977ddfd-t8r52   <none>    1000   true
+minimal-app-586c597f75-w4tmc     <none>    1000   true
+minimal-app-586c597f75-z26zt     <none>    1000   true
+sandboxed-app-75cbbd6556-bctk4   gvisor    1000   true
+sandboxed-app-75cbbd6556-z7xqj   gvisor    1000   true
+
+3. IMAGE SIZES:
+microservice-app:alpine                           7e54639e227a       81.7MB             0B        
+microservice-app:standard                         8043685630ed           0B             0B        
+
+4. RESOURCE USAGE:
+Metrics server not available
+
+5. SECURITY CONTEXTS PER POD:
+compliant-app-66f977ddfd-5ljcx	{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000}
+compliant-app-66f977ddfd-t8r52	{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000}
+minimal-app-586c597f75-w4tmc	{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000}
+minimal-app-586c597f75-z26zt	{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000}
+sandboxed-app-75cbbd6556-bctk4	{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000}
+sandboxed-app-75cbbd6556-z7xqj	{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000}
+
+6. NETWORK POLICIES:
+NAME                          POD-SELECTOR   AGE
+secure-microservices-policy   <none>         29s
+
+=== END OF REPORT ===
