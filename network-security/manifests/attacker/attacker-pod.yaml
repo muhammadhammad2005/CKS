@@ -1,0 +1,27 @@
+# WARNING: This pod is for security testing only
+# Do NOT deploy in production environments
+apiVersion: v1
+kind: Pod
+metadata:
+  name: attacker-pod
+  namespace: attacker
+  labels:
+    app: attacker
+    purpose: security-testing
+spec:
+  containers:
+  - name: attacker
+    image: nicolaka/netshoot
+    command: ["/bin/sh"]
+    args: ["-c", "sleep 3600"]
+    securityContext:
+      capabilities:
+        add: ["NET_RAW", "NET_ADMIN"]
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  restartPolicy: Never

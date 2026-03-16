@@ -1,0 +1,34 @@
+# Backend: only accept from frontend, only connect to database + DNS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-policy
+  namespace: backend
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          tier: frontend
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          tier: database
+    ports:
+    - protocol: TCP
+      port: 3306
+  - ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
