@@ -6,8 +6,28 @@ echo "============================================"
 echo "Date: $(date)"
 echo ""
 
+# Validate required resources
+check_resource() {
+  local name=$1
+  local cmd=$2
+  if ! eval "$cmd" > /dev/null 2>&1; then
+    echo "[ERROR] $name not found or not ready"
+    exit 1
+  fi
+}
+
+# Check pods exist
+check_resource "Frontend Pod" "kubectl get pods -n frontend"
+check_resource "Backend Pod" "kubectl get pods -n backend"
+
 FRONTEND_POD=$(kubectl get pods -n frontend -l app=frontend -o jsonpath='{.items[0].metadata.name}')
 BACKEND_POD=$(kubectl get pods -n backend -l app=backend -o jsonpath='{.items[0].metadata.name}')
+
+# Check services
+check_resource "Backend Service" "kubectl get svc backend-service -n backend"
+check_resource "Database Service" "kubectl get svc database-service -n database"
+check_resource "Frontend Service" "kubectl get svc frontend-service -n frontend"
+
 BACKEND_IP=$(kubectl get service backend-service -n backend -o jsonpath='{.spec.clusterIP}')
 DATABASE_IP=$(kubectl get service database-service -n database -o jsonpath='{.spec.clusterIP}')
 FRONTEND_IP=$(kubectl get service frontend-service -n frontend -o jsonpath='{.spec.clusterIP}')
@@ -25,9 +45,11 @@ run_test() {
   local desc=$1
   local expected=$2
   local cmd=$3
+
   echo -n "$desc: "
   eval "$cmd" > /dev/null 2>&1
   local result=$?
+
   if [ "$expected" = "pass" ] && [ $result -eq 0 ]; then
     echo "PASS ✓"
     PASS=$((PASS+1))
@@ -41,10 +63,10 @@ run_test() {
 }
 
 echo "--- Legitimate Traffic Tests ---"
-run_test "Frontend -> Backend   (expect PASS) " "pass" \
-  "kubectl exec -n frontend $FRONTEND_POD -- sh -c 'wget -qO- --timeout=5 http://$BACKEND_IP > /dev/null'"
+run_test "Frontend -> Backend   (expect PASS)" "pass" \
+  "kubectl exec -n frontend $FRONTEND_POD -- sh -c 'wget -qO- --timeout=5 http://$BACKEND_IP'"
 
-run_test "Backend  -> Database  (expect PASS) " "pass" \
+run_test "Backend  -> Database  (expect PASS)" "pass" \
   "kubectl exec -n backend $BACKEND_POD -- sh -c 'nc -w 3 -z $DATABASE_IP 3306'"
 
 echo ""
@@ -59,10 +81,10 @@ run_test "Attacker -> Database  (expect BLOCK)" "block" \
   "kubectl exec -n attacker attacker-pod -- sh -c 'nc -w 3 $DATABASE_IP 3306'"
 
 run_test "Attacker -> Backend   (expect BLOCK)" "block" \
-  "kubectl exec -n attacker attacker-pod -- sh -c 'wget -qO- --timeout=5 http://$BACKEND_IP > /dev/null'"
+  "kubectl exec -n attacker attacker-pod -- sh -c 'wget -qO- --timeout=5 http://$BACKEND_IP'"
 
 run_test "Attacker -> Frontend  (expect BLOCK)" "block" \
-  "kubectl exec -n attacker attacker-pod -- sh -c 'wget -qO- --timeout=5 http://$FRONTEND_IP > /dev/null'"
+  "kubectl exec -n attacker attacker-pod -- sh -c 'wget -qO- --timeout=5 http://$FRONTEND_IP'"
 
 echo ""
 echo "============================================"
