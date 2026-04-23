@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  web-app-1:
+    build: .
+    container_name: web-app-1
+    ports:
+      - "5001:5000"
+    labels:
+      - "my.custom.label.team=frontend"
+      - "my.custom.label.version=1.0"
+      - "com.datadoghq.ad.logs=[{\"source\": \"python\", \"service\": \"web-app\"}]"
+    environment:
+      - APP_NAME=web-app-1
+    restart: unless-stopped
+
+  web-app-2:
+    build: .
+    container_name: web-app-2
+    ports:
+      - "5002:5000"
+    labels:
+      - "my.custom.label.team=backend"
+      - "my.custom.label.version=1.1"
+      - "com.datadoghq.ad.logs=[{\"source\": \"python\", \"service\": \"web-app\"}]"
+    environment:
+      - APP_NAME=web-app-2
+    restart: unless-stopped
+
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "8080:80"
+    labels:
+      - "my.custom.label.team=infrastructure"
+      - "my.custom.label.version=1.0"
+      - "com.datadoghq.ad.logs=[{\"source\": \"nginx\", \"service\": \"nginx-proxy\"}]"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web-app-1
+      - web-app-2
+    restart: unless-stopped
+
+  redis-cache:
+    image: redis:alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    labels:
+      - "my.custom.label.team=database"
+      - "my.custom.label.version=6.2"
+      - "com.datadoghq.ad.logs=[{\"source\": \"redis\", \"service\": \"redis-cache\"}]"
+    restart: unless-stopped

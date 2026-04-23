@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:7
+    container_name: datadog-agent
+    environment:
+      - DD_API_KEY=f2ff15a73f93abdfcd2a63bf458e6b72
+      - DD_SITE=us5.datadoghq.com
+      - DD_HOSTNAME=docker-lab-host
+      - DD_TAGS=env:lab,team:devops
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_CONTAINER_EXCLUDE_LOGS="name:datadog-agent"
+      - DD_DOCKER_LABELS_AS_TAGS={"my.custom.label.team":"team","my.custom.label.version":"version"}
+      - DD_COLLECT_KUBERNETES_EVENTS=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /opt/datadog-agent/conf.d:/conf.d:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /opt/datadog-agent/logs:/opt/datadog-agent/logs:rw
+    ports:
+      - "8125:8125/udp"
+      - "8126:8126"
+    restart: unless-stopped
+    privileged: true
+    pid: host
